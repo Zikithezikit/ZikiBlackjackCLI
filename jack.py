@@ -36,7 +36,7 @@ def getAllValue(cards):
     hasA = False
     numberOfA = 0
     for i in cards:
-        if(int(getValueOfCard(i)) == 11):
+        if(int(getValueOfCard(i)) >= 11):
             hasA = True
             numberOfA += 1
         else:
@@ -71,11 +71,16 @@ def jackblack():
     print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
     print(f"Player: {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
     # Checks for a Blakcjack
-    if(getAllValue(player) == 21):
-        print("🎉 Blackjack! 🎉")
+    # if(getAllValue(player) == 21):
+    #     print("🎉 Blackjack! 🎉")
+        
 
     # Player inputs
     while(True):
+        if(getAllValue(player) == 21):
+                printNewFrame(False,player,dealer)
+                print("🎉 Blackjack! 🎉")
+                break
         # Player logic
 
         print("   (Hit - Get another card, Stand - Skip)")
@@ -84,16 +89,21 @@ def jackblack():
             # New card
             player.append(playingCards.pop())
             printNewFrame(True,player,dealer)
-            if(getAllValue(player) == 21): break
+            if(getAllValue(player) == 21):
+                printNewFrame(False,player,dealer)
+                break
             if(getAllValue(player) > 21):
+                printNewFrame(False,player,dealer)
                 print("You lose!")
                 break
         else: 
             # Dealer logic
 
             while(getAllValue(dealer) < 17):
+                printNewFrame(False,player,dealer)
                 dealer.append(playingCards.pop())
                 #   Clears the terminal(for most of the os)
+                time.sleep(2)
                 printNewFrame(False,player,dealer)
                 time.sleep(2)
 
@@ -105,7 +115,9 @@ def jackblack():
                 break
             elif(getAllValue(player) == getAllValue(dealer)):
                 print("Tie")
+                break
             else:
+                printNewFrame(False,player,dealer)
                 print("The Dealer Won")
                 break
     
