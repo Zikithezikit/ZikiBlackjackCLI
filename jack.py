@@ -119,14 +119,13 @@ def main():
     # Clears the terminal(for most of the os)
     os.system('cls' if os.name == 'nt' else 'clear')
     jackblack()
-    while(True):
-        #   Clears the terminal(for most of the os)
-        os.system('cls' if os.name == 'nt' else 'clear')
-        st = input("> Do you want to keep playing? (y/n) ")
-        if (st.lower == 'n'):
-            break
-        else:
-            #   Clears the terminal(for most of the os)
-            os.system('cls' if os.name == 'nt' else 'clear')
-            jackblack()
+    # while(True):
+    #     stPlaying = input("> Do you want to keep playing? (y/no) ")
+    #     if (stPlaying.lower == "no"):
+    #         break
+            
+    #     else:
+    #         #   Clears the terminal(for most of the os)
+    #         os.system('cls' if os.name == 'nt' else 'clear')
+    #         jackblack()
 main()
