@@ -1,6 +1,26 @@
 import os
 import random
+import time
 
+# A new frame
+def printNewFrame(hidden, player, dealer):
+    #   Clears the terminal(for most of the os)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    if (hidden==True):
+        print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
+        print(f"Player: ", end =" ") # {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
+        for i in player:
+            print(f" {i} |", end =" ")
+        print(f"Value of cards:{getAllValue(player)}")
+    else:
+        print("Dealer: ", end=" ")
+        for i in dealer:
+            print(f" {i} |", end=" ")
+        print(f"Value of cards:{getAllValue(dealer)}")
+        print(f"Player: ", end =" ") # {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
+        for i in player:
+            print(f" {i} |", end =" ")
+        print(f"Value of cards:{getAllValue(player)}")
 
 def getValueOfCard(cardGiven):
     if(cardGiven[0] == "J" or cardGiven[0] == "Q" or cardGiven[0] == "K"):
@@ -33,7 +53,7 @@ def getAllValue(cards):
     return valueOfAllCards
 
 def jackblack():
-#     # A deck of palying cards
+    # A deck of palying cards
     playingCardsHeart = ["A♥️","2♥️","3♥️","4♥️","5♥️","6♥️","7♥️","8♥️","9♥️","10♥️","J♥️","Q♥️","K♥️"]
     playingCardsDiamond = ["A♦️","2♦️","3♦️","4♦️","5♦️","6♦️","7♦️","8♦️","9♦️","10♦️","J♦️","Q♦️","K♦️"]
     playingCardsClub = ["A♣️","2♣️","3♣️","4♣️","5♣️","6♣️","7♣️","8♣️","9♣️","10♣️","J♣️","Q♣️","K♣️"]
@@ -54,19 +74,40 @@ def jackblack():
     if(getAllValue(player) == 21):
         print("🎉 Blackjack! 🎉")
 
-    # Inputs
+    # Player inputs
     while(True):
+        # Player logic
 
         print("   (Hit - Get another card, Stand - Skip)")
         command = input("> ")
         if (command.lower() == "hit"):
+            # New card
             player.append(playingCards.pop())
-            print(player)
-            print(f"Value of cards:{getAllValue(player)}")
+            printNewFrame(True,player,dealer)
             if(getAllValue(player) > 21):
                 print("You lose!")
+                break
         else: 
-            break
+            # Dealer logic
+
+            while(getAllValue(dealer) < 17):
+                dealer.append(playingCards.pop())
+                #   Clears the terminal(for most of the os)
+                printNewFrame(False,player,dealer)
+                time.sleep(2)
+
+            if(getAllValue(dealer)>21):
+                print("🎉 You won! 🎉")
+                break
+            if(getAllValue(player) > getAllValue(dealer)):
+                print("🎉 The player has won! 🎉")
+                break
+            else:
+                print("The Dealer Won")
+                break
+    
+
+
     
 
     
