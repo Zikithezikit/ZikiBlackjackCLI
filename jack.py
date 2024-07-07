@@ -84,6 +84,7 @@ def jackblack():
             # New card
             player.append(playingCards.pop())
             printNewFrame(True,player,dealer)
+            if(getAllValue(player) == 21): break
             if(getAllValue(player) > 21):
                 print("You lose!")
                 break
@@ -102,6 +103,8 @@ def jackblack():
             if(getAllValue(player) > getAllValue(dealer)):
                 print("🎉 The player has won! 🎉")
                 break
+            elif(getAllValue(player) == getAllValue(dealer)):
+                print("Tie")
             else:
                 print("The Dealer Won")
                 break
@@ -112,8 +115,18 @@ def jackblack():
 
     
 def main():
+    
     # Clears the terminal(for most of the os)
     os.system('cls' if os.name == 'nt' else 'clear')
     jackblack()
-
+    while(True):
+        #   Clears the terminal(for most of the os)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        st = input("> Do you want to keep playing? (y/n) ")
+        if (st.lower == 'n'):
+            break
+        else:
+            #   Clears the terminal(for most of the os)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            jackblack()
 main()
