@@ -1,27 +1,32 @@
+# imports
 import os
 import random
 import time
 
-# A new frame
+# Creates and shows a new frame
 def printNewFrame(hidden, player, dealer):
     #   Clears the terminal(for most of the os)
     os.system('cls' if os.name == 'nt' else 'clear')
+    # Hides the dealer's card.
     if (hidden==True):
         print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
-        print(f"Player: ", end =" ") # {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
+        print(f"Player: ", end =" ")
         for i in player:
             print(f" {i} |", end =" ")
         print(f"Value of cards:{getAllValue(player)}")
     else:
+        # Shows the dealer's card.
         print("Dealer: ", end=" ")
         for i in dealer:
             print(f" {i} |", end=" ")
         print(f"Value of cards:{getAllValue(dealer)}")
-        print(f"Player: ", end =" ") # {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
+        print(f"Player: ", end =" ")
         for i in player:
             print(f" {i} |", end =" ")
         print(f"Value of cards:{getAllValue(player)}")
 
+
+# Gives the int value of a single card.
 def getValueOfCard(cardGiven):
     if(cardGiven[0] == "J" or cardGiven[0] == "Q" or cardGiven[0] == "K"):
         return 10
@@ -31,6 +36,8 @@ def getValueOfCard(cardGiven):
         return 10
     else: return int(cardGiven[0])
 
+
+# Gets the value of all cards in the hand.
 def getAllValue(cards):
     valueOfAllCards = 0
     hasA = False
@@ -43,8 +50,8 @@ def getAllValue(cards):
             valueOfAllCards += getValueOfCard(i)
     try:
         while(numberOfA>0): # For loop didn't work
-            if (hasA == True and valueOfAllCards > 11 ):
-                valueOfAllCards += 1 # ++ Also works but this makes it more clear. Or apparently not man python is weird 
+            if (hasA == True and valueOfAllCards >= 11 ):
+                valueOfAllCards += 1 
             elif(hasA == True and valueOfAllCards < 11):
                 valueOfAllCards += 11
             numberOfA -= 1
@@ -53,7 +60,8 @@ def getAllValue(cards):
     return valueOfAllCards
 
 def jackblack():
-    # A deck of palying cards
+    didYouWin = "False"
+    # A deck of palying cards.
     playingCardsHeart = ["A♥️","2♥️","3♥️","4♥️","5♥️","6♥️","7♥️","8♥️","9♥️","10♥️","J♥️","Q♥️","K♥️"]
     playingCardsDiamond = ["A♦️","2♦️","3♦️","4♦️","5♦️","6♦️","7♦️","8♦️","9♦️","10♦️","J♦️","Q♦️","K♦️"]
     playingCardsClub = ["A♣️","2♣️","3♣️","4♣️","5♣️","6♣️","7♣️","8♣️","9♣️","10♣️","J♣️","Q♣️","K♣️"]
@@ -70,15 +78,13 @@ def jackblack():
     player = [playingCards.pop(),playingCards.pop()]
     print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
     print(f"Player: {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
-    # Checks for a Blakcjack
-    # if(getAllValue(player) == 21):
-    #     print("🎉 Blackjack! 🎉")
         
 
     # Player inputs
     while(True):
         if(getAllValue(player) == 21):
                 printNewFrame(False,player,dealer)
+                didYouWin = "Blackjack"
                 print("🎉 Blackjack! 🎉")
                 break
         # Player logic
@@ -86,18 +92,19 @@ def jackblack():
         print("   (Hit - Get another card, Stand - Skip)")
         command = input("> ")
         if (command.lower() == "hit"):
-            # New card
+            # New card.
             player.append(playingCards.pop())
             printNewFrame(True,player,dealer)
             if(getAllValue(player) == 21):
                 printNewFrame(False,player,dealer)
+                didYouWin = "True"
                 break
             if(getAllValue(player) > 21):
                 printNewFrame(False,player,dealer)
                 print("You lose!")
                 break
         else: 
-            # Dealer logic
+            # Dealer logic.
 
             while(getAllValue(dealer) < 17):
                 printNewFrame(False,player,dealer)
@@ -109,35 +116,64 @@ def jackblack():
 
             if(getAllValue(dealer)>21):
                 print("🎉 You won! 🎉")
+                didYouWin = "True"
                 break
             if(getAllValue(player) > getAllValue(dealer)):
-                print("🎉 The player has won! 🎉")
+                print("🎉 You won! 🎉")
+                didYouWin = "True"
                 break
             elif(getAllValue(player) == getAllValue(dealer)):
+                didYouWin = "Tie"
                 print("Tie")
                 break
             else:
                 printNewFrame(False,player,dealer)
                 print("The Dealer Won")
                 break
+    return didYouWin
     
+# Get number input (used for the betting system).
+def get_number_input(prompt):
+    while True:
+        value = input(prompt)
+        if value.isnumeric():
+            return int(value)
+        else:
+            print("Please enter a valid number.")
 
 
-    
-
-    
 def main():
+    # The money of the player.
+    playerMoney = 2500
+    while(True):
+        # Clears the terminal(for most of the os)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        if(playerMoney == 0):
+            print("Man... You should stop")
+            break
+        print(f"Your money: {playerMoney}")
+        bet = get_number_input("> What amount would you like to bet? ")
+        while(bet > playerMoney or bet < 1):
+            print("> You don't have sufficient funds")
+            print(f"Your money: {playerMoney}")
+            bet = get_number_input("> What amount would you like to bet? ")
+        didYouwin = jackblack()
+        if(didYouwin == "True"):
+            playerMoney += int(bet)
+        elif(didYouwin == "False"):
+            playerMoney -= int(bet)
+        elif(didYouwin == "Blackjack"):
+            playerMoney += int(bet) * 1.5
+        
+        keepPlaying = input("> Would you like to keep playing? (yes/no)")
+        if(keepPlaying.lower == "no"):
+            break
+
+
+
+
+
+
+
     
-    # Clears the terminal(for most of the os)
-    os.system('cls' if os.name == 'nt' else 'clear')
-    jackblack()
-    # while(True):
-    #     stPlaying = input("> Do you want to keep playing? (y/no) ")
-    #     if (stPlaying.lower == "no"):
-    #         break
-            
-    #     else:
-    #         #   Clears the terminal(for most of the os)
-    #         os.system('cls' if os.name == 'nt' else 'clear')
-    #         jackblack()
 main()
