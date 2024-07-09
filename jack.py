@@ -115,18 +115,25 @@ def jackblack():
                 time.sleep(2)
 
             if(getAllValue(dealer)>21):
+                time.sleep(2)
+                printNewFrame(False,player,dealer)
                 print("🎉 You won! 🎉")
                 didYouWin = "True"
                 break
             if(getAllValue(player) > getAllValue(dealer)):
+                time.sleep(2)
+                printNewFrame(False,player,dealer)
                 print("🎉 You won! 🎉")
                 didYouWin = "True"
                 break
             elif(getAllValue(player) == getAllValue(dealer)):
+                time.sleep(2)
+                printNewFrame(False,player,dealer)
                 didYouWin = "Tie"
                 print("Tie")
                 break
             else:
+                time.sleep(2)
                 printNewFrame(False,player,dealer)
                 print("The Dealer Won")
                 break
