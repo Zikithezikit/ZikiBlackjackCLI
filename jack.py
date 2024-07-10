@@ -4,26 +4,46 @@ import random
 import time
 
 # Creates and shows a new frame
-def printNewFrame(hidden, player, dealer):
+def printNewFrame(hidden, player, dealer, split):
     #   Clears the terminal(for most of the os)
     os.system('cls' if os.name == 'nt' else 'clear')
     # Hides the dealer's card.
-    if (hidden==True):
-        print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
-        print(f"Player: ", end =" ")
-        for i in player:
-            print(f" {i} |", end =" ")
-        print(f"Value of cards:{getAllValue(player)}")
+    if(split):
+        if (hidden):
+            print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
+            print(f"Player: ", end =" ")
+            for i in player:
+                for j in i:
+                    print(f" {j} |", end =" ")
+                print(f"🃏 Hand: ", end=" ")
+                print(f"Value of cards:{getAllValue(i)}")
+        else:
+            # Shows the dealer's card.
+            print("Dealer: ", end=" ")
+            for i in dealer:
+                print(f" {i} |", end=" ")
+            print(f"Value of cards:{getAllValue(dealer)}")
+            print(f"Player: ", end =" ")
+            for i in player:
+                print(f" {i} |", end =" ")
+            print(f"Value of cards:{getAllValue(player)}")
     else:
-        # Shows the dealer's card.
-        print("Dealer: ", end=" ")
-        for i in dealer:
-            print(f" {i} |", end=" ")
-        print(f"Value of cards:{getAllValue(dealer)}")
-        print(f"Player: ", end =" ")
-        for i in player:
-            print(f" {i} |", end =" ")
-        print(f"Value of cards:{getAllValue(player)}")
+        if (hidden):
+            print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
+            print(f"Player: ", end =" ")
+            for i in player:
+                print(f" {i} |", end =" ")
+            print(f"Value of cards:{getAllValue(player)}")
+        else:
+            # Shows the dealer's card.
+            print("Dealer: ", end=" ")
+            for i in dealer:
+                print(f" {i} |", end=" ")
+            print(f"Value of cards:{getAllValue(dealer)}")
+            print(f"Player: ", end =" ")
+            for i in player:
+                print(f" {i} |", end =" ")
+            print(f"Value of cards:{getAllValue(player)}")
 
 
 # Gives the int value of a single card.
@@ -78,63 +98,69 @@ def jackblack():
     player = [playingCards.pop(),playingCards.pop()]
     print(f"Dealer: {dealer[0]}, ## | Value of card:{getValueOfCard(dealer[0])}")
     print(f"Player: {player[0]}, {player[1]} | Value of cards:{getAllValue(player)}")
-        
-
+    split = False
+    startingCards = True
     # Player inputs
     while(True):
         if(getAllValue(player) == 21):
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 didYouWin = "Blackjack"
                 print("🎉 Blackjack! 🎉")
                 break
         # Player logic
-
-        print("   (Hit - Get another card, Stand - Skip)")
+        if(player[0][0] == player[1][0] and startingCards):
+            print("   (Hit - Get another card, Stand - Skip, Split - split your hand)")
+        else:
+            print("   (Hit - Get another card, Stand - Skip)")
         command = input("> ")
         if (command.lower() == "hit"):
             # New card.
             player.append(playingCards.pop())
-            printNewFrame(True,player,dealer)
+            startingCards = False
+            printNewFrame(True,player,dealer,split)
             if(getAllValue(player) == 21):
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 didYouWin = "True"
-                break
-            if(getAllValue(player) > 21):
-                printNewFrame(False,player,dealer)
+            elif(getAllValue(player) > 21):
+                printNewFrame(False,player,dealer,split)
                 print("You lose!")
                 break
+        elif(command.lower() == "split"):
+            split = True
+            player2 = [player.pop(),playingCards.pop()]
+            player.append(playingCards.pop())
+            splitCards = [player, player2]
+            printNewFrame(True,splitCards,dealer,split)
         else: 
             # Dealer logic.
 
             while(getAllValue(dealer) < 17):
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 dealer.append(playingCards.pop())
-                #   Clears the terminal(for most of the os)
                 time.sleep(2)
-                printNewFrame(False,player,dealer)
-                time.sleep(2)
+                printNewFrame(False,player,dealer,split)
 
             if(getAllValue(dealer)>21):
                 time.sleep(2)
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 print("🎉 You won! 🎉")
                 didYouWin = "True"
                 break
             if(getAllValue(player) > getAllValue(dealer)):
                 time.sleep(2)
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 print("🎉 You won! 🎉")
                 didYouWin = "True"
                 break
             elif(getAllValue(player) == getAllValue(dealer)):
                 time.sleep(2)
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 didYouWin = "Tie"
                 print("Tie")
                 break
             else:
                 time.sleep(2)
-                printNewFrame(False,player,dealer)
+                printNewFrame(False,player,dealer,split)
                 print("The Dealer Won")
                 break
     return didYouWin
