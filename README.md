@@ -2,8 +2,6 @@
 
 
 #### This is a simple CLI Blackjack game made in python
-> [!WARNING]  
-> This is not finished yet
 
 ## Installation
 Clone the repository
