@@ -17,3 +17,9 @@ Run the .py file
 python3 ./jack.py
 ```
 >  Do it  👴 ⚡ 
+
+
+
+
+> [!NOTE]  
+> There is "money". As of yet there isn't the option to double down.
